@@ -1,0 +1,42 @@
+version: "3"
+services:
+ 
+ mongo:
+    container_name: mongo
+    image: mongo:5.0
+    restart: always
+    # environment:
+    #   - MONGO_INITDB_DATABASE=todos
+    #   - MONGO_INITDB_ROOT_USERNAME=admin
+    #   - MONGO_INITDB_ROOT_PASSWORD=pass
+
+    volumes:
+      - ./data:/data/db
+    ports:
+      - '27017:27017'
+
+ client:
+  container_name: client
+  restart: always
+  build: ./client
+  ports:
+    - "4000:3000"
+  links:
+    - server
+
+ server:
+  container_name: server
+  restart: always
+  build: ./server
+  ports:
+    - "3000:3000"
+  links:
+    - mongo
+ 
+ 
+ mongo-express: 
+    container_name: mongo-express
+    image: mongo-express
+    restart: always
+    ports: 
+      - '8083:8081'
